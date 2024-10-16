@@ -6,6 +6,7 @@ from elements.hi_message import HiMessage
 from elements.quote import Quote
 from buttons.image_button import ImageButton
 from layouts.form_layout import FormLayout
+from pages.form_page import FormPage
 
 def main(page: ft.Page):
     page.window.width = 375
@@ -119,21 +120,12 @@ def main(page: ft.Page):
         if form == sleepForm:
             formPage.set_form(tiredForm)
         
-
-    tiredForm = ft.Stack(
-
-            controls=[
-
-                ft.Container(
+    tiredForm = FormPage(
+        backImage=ft.Container(
                     content=ft.Image(src="ui/tiredEmojis.png", scale=1),
                     margin=ft.margin.only(bottom=50),
                 ),
-
-                PageLayout(
-                    content=ft.Column(
-
-                        controls=[
-                            ft.Container(
+        text=ft.Container(
                                 content=ft.Column(
                                     [
                                         ft.Text("Насколько", style=wide_header, text_align=ft.TextAlign.END),
@@ -149,83 +141,26 @@ def main(page: ft.Page):
                                 ),
                                 alignment=ft.alignment.center_right
                             ),
-                            ft.Container(    
-                                content=ft.Slider(
-                                    width=400,
-                                    active_color="#a276ff",
-                                    ),
-                            ),
-                            ft.Row(
-                                controls=[
-                                    ft.Image(src="ui/unlike.png", width=25, height=25),
-                                    ft.Image(src="ui/like.png", width=25, height=25),
-                                ],
-                                alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-                            ),
-                            ft.Container(
-                                content=ImageButton(image="ui/next.png"),
-                                height=50,
-                                alignment=ft.alignment.center_right,
-                                margin=ft.margin.only(top=40),
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.END,
-                        spacing=0,
-                    ),
-                )
+        sliderColor="#a276ff",
+        minSlider=ft.Image(src="ui/unlike.png", width=25, height=25),
+        maxSlider=ft.Image(src="ui/like.png", width=25, height=25),
+        button=ImageButton(image="ui/next.png")
+    )
 
-            ],
-            expand=True
-        )
-
-
-    sleepForm = ft.Stack(
-
-            controls=[
-
-                ft.Container(
-                    ft.Image(src="ui/sleepEmojis.png", scale=1.1),
-                    margin=ft.margin.only(bottom=50),
+    sleepForm = FormPage(
+        backImage=ft.Container(
+                    content=ft.Image(src="ui/sleepEmojis.png", scale=1.1),
+                    margin=ft.margin.only(bottom=60),
                 ),
-
-                PageLayout(
-                    content=ft.Column(
-
-                        controls=[
-                            ft.Container(
-                                ft.Text("Как ты\nспал?", style=form_text),
-
-                            ),
-                            ft.Container(    
-                                content=ft.Slider(
-                                    width=400,
-                                    active_color="#a276ff",
-                                    ),
-                            ),
-                            ft.Row(
-                                controls=[
-                                    ft.Image(src="ui/unlike.png", width=25, height=25),
-                                    ft.Image(src="ui/like.png", width=25, height=25),
-                                ],
-                                alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-                            ),
-                            ft.Container(
-                                content=ImageButton(image="ui/next.png", on_click=nextForm),
-                                height=50,
-                                alignment=ft.alignment.center_right,
-                                margin=ft.margin.only(top=30),
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.END,
-                        spacing=0,
-                    ),
-                )
-
-            ],
-            expand=True
-        )
-
-
+        text=ft.Container(
+                    ft.Text("Как ты\nспал?", style=form_text)
+            ),
+        sliderColor="#a276ff",
+        minSlider=ft.Image(src="ui/unlike.png", width=25, height=25),
+        maxSlider=ft.Image(src="ui/like.png", width=25, height=25),
+        button=ImageButton(image="ui/next.png", on_click=nextForm)
+    )
+   
     formPage = FormLayout(init_form=sleepForm)
 
     currentPage = formPage
