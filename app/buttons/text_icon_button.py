@@ -1,13 +1,15 @@
 import flet as ft
+from styles.text import basic_text
+from typing import Callable
 
 class TextIconButton(ft.ElevatedButton):
     def __init__(
             self,
             text : str = None,
             icon : ft.Image = None,
-            text_style : ft.TextStyle = None,
-            width : int = 50,
-            height : int = 50,
+            text_style : ft.TextStyle = basic_text,
+            width : int = None,
+            height : int = None,
             color : str = "#a276ff",
             border_radius : int = 50,
             spacing : int = 20,
@@ -20,7 +22,7 @@ class TextIconButton(ft.ElevatedButton):
         if text is None:
             self.text = None
         else:
-            self.text = ft.Text(text, style=text_style)
+            self.text = ft.Text(text, style=text_style, text_align=ft.TextAlign.CENTER)
         
         if icon is None:
             self.icon = None
@@ -42,7 +44,8 @@ class TextIconButton(ft.ElevatedButton):
             self.in_items.append(
                 ft.Container(
                         self.text,
-                        margin=ft.margin.only(bottom=5)
+                        margin=ft.margin.only(bottom=5),
+                        alignment=ft.alignment.center
                     )
             )
 
@@ -50,21 +53,27 @@ class TextIconButton(ft.ElevatedButton):
             self.in_items.append(
                 ft.Container(
                         self.icon,
+                        alignment=ft.alignment.center
                 )
             )
 
         self.content = ft.Container(
-            content=ft.Row(
-                [
-                    *self.in_items
-                ],
-                spacing=spacing,
-                alignment=ft.MainAxisAlignment.CENTER,
-                vertical_alignment=ft.CrossAxisAlignment.CENTER
+            content=ft.Container(
+                ft.Row(
+                    [
+                        *self.in_items
+                    ],
+                    spacing=spacing,
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+                alignment=ft.alignment.center
             ),
             width=width,
             height=height,
             border_radius=border_radius,
             bgcolor=color,
-            alignment=ft.alignment.center
+            alignment=ft.alignment.center,
+            padding=0,
+            margin=0
         )

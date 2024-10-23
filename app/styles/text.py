@@ -43,3 +43,9 @@ form_text = ft.TextStyle(
     weight=ft.FontWeight.W_800,
     size=35
 )
+
+buttons_text = ft.TextStyle(
+    color="white",
+    weight=ft.FontWeight.W_500,
+    size=20
+)
