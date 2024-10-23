@@ -1,12 +1,19 @@
 import flet as ft
 
 from elements.menu_bar import MenuBar
-from layouts.main_layout import PageLayout
+from layouts.main_layout import PageLayout, MainLayout
 from elements.hi_message import HiMessage
 from elements.quote import Quote
 from buttons.image_button import ImageButton
 from layouts.form_layout import FormLayout
 from pages.form_page import FormPage
+from pages.sleep_form import SleepForm
+from pages.tired_form import TiredForm
+from pages.happy_form import HappyForm
+from pages.day_form import DayForm
+from pages.emoji_form import EmojiForm
+from pages.stats import StatsPage
+from styles.text import *
 
 def main(page: ft.Page):
     page.window.width = 375
@@ -17,43 +24,7 @@ def main(page: ft.Page):
     page.padding = 0
     page.spacing = 0
 
-    basic_header = ft.TextStyle(
-        color="white",
-        weight=ft.FontWeight.W_400,
-        size=25
-    )
-
-    wide_header = ft.TextStyle(
-        color="white",
-        weight=ft.FontWeight.W_600,
-        size=25
-    )
-
-    basic_text = ft.TextStyle(
-        color="white",
-        weight=ft.FontWeight.W_400,
-        size=17
-    )
-
-    wide_text = ft.TextStyle(
-        color="white",
-        weight=ft.FontWeight.W_600,
-        size=17
-    )
-
-    quote_text = ft.TextStyle(
-        color="white",
-        weight=ft.FontWeight.W_600,
-        size=25,
-        letter_spacing=0.5,
-        italic=True
-    )
-
-    form_text = ft.TextStyle(
-        color="white",
-        weight=ft.FontWeight.W_800,
-        size=35
-    )
+    
 
     def calendar_onclick(_):
         print("calendar")
@@ -96,79 +67,14 @@ def main(page: ft.Page):
                     ), 
                 )
 
-    currentPage = ft.Column(
-
-
-            controls=[
-
-
-                
-                mainPage,
-
-                
-                menubar
-
-
-            ],
-
-            expand=True,
-            spacing=0
-        )
-
-    def nextForm(_):
-        form = formPage.get_current_form()
-        if form == sleepForm:
-            formPage.set_form(tiredForm)
-        
-    tiredForm = FormPage(
-        backImage=ft.Container(
-                    content=ft.Image(src="ui/tiredEmojis.png", scale=1),
-                    margin=ft.margin.only(bottom=50),
-                ),
-        text=ft.Container(
-                                content=ft.Column(
-                                    [
-                                        ft.Text("Насколько", style=wide_header, text_align=ft.TextAlign.END),
-                                        ft.Text(
-                                            "ты устал?", 
-                                            style=form_text,
-                                            text_align=ft.TextAlign.END, 
-                                            color="#c9a6ff"
-                                            ),
-                                    ],
-                                    spacing=0,
-                                    horizontal_alignment=ft.CrossAxisAlignment.END
-                                ),
-                                alignment=ft.alignment.center_right
-                            ),
-        sliderColor="#a276ff",
-        minSlider=ft.Image(src="ui/unlike.png", width=25, height=25),
-        maxSlider=ft.Image(src="ui/like.png", width=25, height=25),
-        button=ImageButton(image="ui/next.png")
+    mainLayout = MainLayout(
+        page=mainPage,
+        menu_bar=menubar
     )
 
-    sleepForm = FormPage(
-        backImage=ft.Container(
-                    content=ft.Image(src="ui/sleepEmojis.png", scale=1.1),
-                    margin=ft.margin.only(bottom=60),
-                ),
-        text=ft.Container(
-                    ft.Text("Как ты\nспал?", style=form_text)
-            ),
-        sliderColor="#a276ff",
-        minSlider=ft.Image(src="ui/unlike.png", width=25, height=25),
-        maxSlider=ft.Image(src="ui/like.png", width=25, height=25),
-        button=ImageButton(image="ui/next.png", on_click=nextForm)
-    )
-   
-    formPage = FormLayout(init_form=sleepForm)
+    currentPage = mainLayout
 
-    currentPage = formPage
-
-    page.add(
-        
-        
-        ft.Container(
+    mainScreen = ft.Container(
             currentPage,
             gradient=ft.LinearGradient(
                 colors=["#000000", "#140C20"],
@@ -179,7 +85,75 @@ def main(page: ft.Page):
             alignment=ft.alignment.top_left
         )
 
+
         
+    tiredForm = TiredForm(
+        text_style1=wide_header,
+        text_style2=form_text
+    )
+
+    sleepForm = SleepForm(
+        text_style=form_text
+    )
+
+    happyForm = HappyForm(
+        text_style1=wide_header,
+        text_style2=form_text
+    )
+
+    dayFrom = DayForm(
+        text_style1=wide_header,
+        text_style2=form_text
+    )
+
+    emojiForm = EmojiForm(
+        text=ft.Text(
+            "Опиши свой день",
+            style=wide_text,
+            size=25
+        ),
+        text2=ft.Row(
+            controls=[
+                ft.Text(
+                    "одной",
+                    style=wide_text,
+                    size=25,
+                ),
+
+                ft.Text(
+                    "эмоцией",
+                    style=wide_text,
+                    size=25,
+                    color="#c9a6ff"
+                )
+            ],
+            alignment=ft.MainAxisAlignment.CENTER
+        )
+    )
+
+    def end_form():
+        print(sleepForm.get_input_data())
+        print(emojiForm.get_input_data())
+        mainScreen.content = mainLayout
+        mainScreen.update()
+   
+    formPage = FormLayout(
+        forms=[sleepForm, tiredForm, happyForm, dayFrom, emojiForm], 
+        end_event=end_form
+        )
+
+    statsPage = StatsPage(
+
+    )
+
+    mainScreen.content = statsPage
+
+    page.add(
+        
+        
+        
+
+        mainScreen
 
     )
 

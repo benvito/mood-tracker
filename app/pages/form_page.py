@@ -1,16 +1,17 @@
 import flet as ft
 from layouts.main_layout import PageLayout
 from buttons.image_button import ImageButton
+from buttons.text_icon_button import TextIconButton
 
 class FormPage(ft.Stack):
     def __init__(
         self,
-        backImage : ft.Control,
-        text : ft.Control,
-        minSlider : ft.Image,
-        maxSlider : ft.Image,
-        sliderColor : str,
-        button : ImageButton,
+        backImage : ft.Control = ft.Container(),
+        text : ft.Control = ft.Text("Text"),
+        minSlider : ft.Image = ft.Image(src="ui/unlike.png", width=25, height=25),
+        maxSlider : ft.Image = ft.Image(src="ui/like.png", width=25, height=25),
+        sliderColor : str = "#a276ff",
+        button : TextIconButton = TextIconButton(),
         button_size : int = 50,
         *args,
         **kwagrs,
@@ -60,4 +61,13 @@ class FormPage(ft.Stack):
                 ),
             )
         ]
+
+    def get_button(self):
+        return self.button
+
+    def set_button_on_click(self, func):
+        self.button.on_click = func
+
+    def get_input_data(self):
+        return self.slider.value
         

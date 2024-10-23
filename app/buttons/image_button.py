@@ -4,7 +4,7 @@ class ImageButton(ft.ElevatedButton):
 
     def __init__(
             self,
-            image,
+            image = '',
             *args,
             **kwargs
             ):
