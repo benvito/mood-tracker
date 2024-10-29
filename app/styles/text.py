@@ -49,3 +49,15 @@ buttons_text = ft.TextStyle(
     weight=ft.FontWeight.W_500,
     size=20
 )
+
+percent_text = ft.TextStyle(
+    color="#fcffcb",
+    weight=ft.FontWeight.W_700,
+    size=60
+)
+
+stat_num_text = ft.TextStyle(
+    color="#fcffcb",
+    weight=ft.FontWeight.W_700,
+    size=40
+)

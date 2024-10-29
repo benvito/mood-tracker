@@ -10,15 +10,19 @@ class TextIconButton(ft.ElevatedButton):
             text_style : ft.TextStyle = basic_text,
             width : int = None,
             height : int = None,
-            color : str = "#a276ff",
+            btn_color : str = "#a276ff",
+            selected_color : str = "#1c1c1c",
             border_radius : int = 50,
             spacing : int = 20,
+            selectable : bool = False,
             *args,
             **kwargs
     ):
 
         super().__init__(*args, **kwargs)
-
+        self.selected_color = selected_color
+        self._selected = False
+        self.btn_color = btn_color
         if text is None:
             self.text = None
         else:
@@ -72,8 +76,20 @@ class TextIconButton(ft.ElevatedButton):
             width=width,
             height=height,
             border_radius=border_radius,
-            bgcolor=color,
+            bgcolor=self.btn_color,
             alignment=ft.alignment.center,
             padding=0,
             margin=0
         )
+
+    @property
+    def selected(self):
+        return self._selected
+
+    @selected.setter
+    def selected(self, value):
+        self._selected = value
+        self.update_color(self.btn_color)
+    
+    def update_color(self, color):
+        self.content.bgcolor = color if self.selected else self.selected_color
