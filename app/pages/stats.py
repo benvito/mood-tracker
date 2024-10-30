@@ -60,9 +60,7 @@ class StatsPage(PageLayout):
                     tiles=[
                         FreqEmote(),
                         PercentHappy(),
-                        Tile(gradient=get_gradient(
-                            "#B386FF", "#542B99", 
-                            [ft.alignment.top_right, ft.alignment.bottom_left])),
+                        DayAvg(),
                         Tile(gradient=get_gradient(
                             "#B386FF", "#542B99", 
                             [ft.alignment.top_left, ft.alignment.bottom_right])),
