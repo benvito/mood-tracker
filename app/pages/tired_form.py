@@ -43,3 +43,6 @@ class TiredForm(FormPage):
         )
 
         FormPage.__init__(self, backImage, text, minSlider, maxSlider, sliderColor, button)
+
+    def get_info(self):
+        return "TiredForm"

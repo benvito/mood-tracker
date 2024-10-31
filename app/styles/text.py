@@ -61,3 +61,9 @@ stat_num_text = ft.TextStyle(
     weight=ft.FontWeight.W_700,
     size=40
 )
+
+stat_max_score = ft.TextStyle(
+    color="white",
+    weight=ft.FontWeight.W_600,
+    size=35
+)

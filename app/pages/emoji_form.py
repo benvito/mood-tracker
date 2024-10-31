@@ -167,3 +167,6 @@ class EmojiForm(FormPage):
 
     def get_input_data(self):
         return self.choose.get_current_image_id()
+
+    def get_info(self):
+        return "EmojiForm"

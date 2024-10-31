@@ -13,7 +13,8 @@ class FormLayout(ft.Container):
         super().__init__(*args, **kwargs)
 
         self.forms = forms
-        self.current_form = init
+        self.init = init
+        self.current_form = self.init
         self.end_event = end_event
 
         self.animForm = ft.AnimatedSwitcher(
@@ -38,9 +39,10 @@ class FormLayout(ft.Container):
         return self.animForm.content
 
     def set_form(self, form):
-        form.set_button_on_click(self.next_form)
+        form.set_button_on_click(self.next_form)        
         self.animForm.content = form
-        self.animForm.update()
+        print(self.forms[self.current_form].get_info())
+        self.update()
 
     def next_form(self, _):
         self.current_form = self.current_form + 1
@@ -48,3 +50,8 @@ class FormLayout(ft.Container):
             self.end_event()
             return
         self.set_form(self.forms[self.current_form])
+
+    def reset(self):
+        self.current_form = self.init
+        self.set_form(self.forms[self.current_form])
+        self.update()

@@ -36,3 +36,10 @@ class MainLayout(ft.Column):
         ]
 
         self.update()
+
+    def set_page_no_update(self, page : ft.Control):
+        self.current_page = page
+        self.controls = [
+            self.current_page,
+            self.menu_bar,
+        ]

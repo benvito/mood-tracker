@@ -9,7 +9,8 @@ from elements.my_tiles import *
 
 class StatsPage(PageLayout):
     def __init__(
-            self, 
+            self,
+            home_button : ft.Control = None,
             *args, 
             **kwargs
     ):
@@ -45,29 +46,38 @@ class StatsPage(PageLayout):
                     )
                 )
 
-        self.content = ft.Column(
-
-
-            controls=[
-
-                self.header,
-
-                self.button_bar,
-
-                Tiles(
+        self.tiles = Tiles(
                     h_space_around=True,
                     tiles_by_row=2,
                     tiles=[
                         FreqEmote(),
                         PercentHappy(),
                         DayAvg(),
-                        Tile(gradient=get_gradient(
-                            "#B386FF", "#542B99", 
-                            [ft.alignment.top_left, ft.alignment.bottom_right])),
+                        TiredScore(),
                     ]
                 )
 
-            ]
+        self.content = ft.Column(
+
+
+            controls=[
+                ft.Container(
+                    home_button,
+                ),
+
+                ft.Container(
+                    self.header,
+                ),
+
+                self.button_bar,
+
+                ft.Container(
+                    self.tiles,
+                    margin=ft.margin.symmetric(vertical=15)
+                )
+
+            ],
+            spacing=10
 
         )
 

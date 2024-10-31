@@ -70,4 +70,8 @@ class FormPage(ft.Stack):
 
     def get_input_data(self):
         return self.slider.value
+
+    def get_info(self):
+        return "Basic Form Template"
+        
         
