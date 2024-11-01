@@ -14,214 +14,188 @@ from pages.day_form import DayForm
 from pages.emoji_form import EmojiForm
 from pages.stats import StatsPage
 from styles.text import *
+from backend.db import DatabaseController
 
-def main(page: ft.Page):
-    page.window.width = 375
-    page.window.height = 812
-    page.window.always_on_top = True
+class App:
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.page.window.width = 375
+        self.page.window.height = 812
+        self.page.window.always_on_top = True
 
-    page.bgcolor = "#0b0713"
-    page.padding = 0
-    page.spacing = 0
+        self.page.bgcolor = "#0b0713"
+        self.page.padding = 0
+        self.page.spacing = 0
 
-    def go_home(_):
-        page.go("/")
+        self.init_backend()
 
-    home_button = ImageButton(
-        image="ui/home.png",
-        width=40,
-        on_click=go_home
-    )
+        self.init_components()
+        self.setup_event_handlers()
+        self.page.go(self.page.route)
 
-    def calendar_onclick(_):
-        page.go("/calendar")
+    def init_backend(self):
+        print("Database connection open")
+        self.db = DatabaseController()
+
+    def init_components(self):
+        self.home_button = ImageButton(
+            image="ui/home.png",
+            width=40,
+            on_click=self.go_home
+        )
+
+        self.menubar = MenuBar(
+            image="ui/menubar.png",
+            calendar="ui/Calendar.png",
+            calendar_onclick=self.calendar_onclick,
+            chart="ui/BarChart.png",
+            chart_onclick=self.chart_onclick,
+            add="ui/Add.png",
+            add_onclick=self.add_onclick
+        )
+
+        self.mainPage = PageLayout(
+            content=ft.Column(
+                controls=[
+                    HiMessage(text_style=basic_header),
+                    ft.Container(expand=True),
+                    Quote(quote_style=quote_text, text_style=basic_text),
+                ],
+            ),
+        )
+
+        self.tiredForm = TiredForm(text_style1=wide_header, text_style2=form_text)
+        self.sleepForm = SleepForm(text_style=form_text)
+        self.happyForm = HappyForm(text_style1=wide_header, text_style2=form_text)
+        self.dayForm = DayForm(text_style1=wide_header, text_style2=form_text)
+        self.emojiForm = EmojiForm(
+            text=ft.Text("Опиши свой день", style=wide_text, size=25),
+            text2=ft.Row(
+                controls=[
+                    ft.Text("одной", style=wide_text, size=25),
+                    ft.Text("эмоцией", style=wide_text, size=25, color="#c9a6ff")
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+        )
+
+        self.formPage = FormLayout(
+            forms=[self.sleepForm, self.tiredForm, self.happyForm, self.dayForm, self.emojiForm],
+            end_event=self.end_form
+        )
+
+        self.statsPage = StatsPage(home_button=self.home_button)
+
+        self.mainLayout = MainLayout(page=self.mainPage, menu_bar=self.menubar)
+
+        self.mainScreen = ft.Container(
+            self.mainLayout,
+            gradient=ft.LinearGradient(
+                colors=["#000000", "#140C20"],
+                begin=ft.alignment.top_center,
+                end=ft.alignment.bottom_center,
+            ),
+            expand=True,
+            alignment=ft.alignment.top_left
+        )
+
+        self.formScreen = ft.Container(
+            self.formPage,
+            gradient=ft.LinearGradient(
+                colors=["#000000", "#140C20"],
+                begin=ft.alignment.top_center,
+                end=ft.alignment.bottom_center,
+            ),
+            expand=True,
+            alignment=ft.alignment.top_left
+        )
+
+    def setup_event_handlers(self):
+        self.page.on_route_change = self.route_change
+        self.page.on_view_pop = self.view_pop
+
+    def go_home(self, _):
+        self.page.go("/")
+
+    def calendar_onclick(self, _):
+        self.page.go("/calendar")
         print("calendar")
 
-    def chart_onclick(_):
-        page.go("/stats")
+    def chart_onclick(self, _):
+        self.page.go("/stats")
         print("chart")
 
-    def add_onclick(_):
-        page.go("/new")
+    def add_onclick(self, _):
+        self.page.go("/new")
         print("add")
 
-    menubar = MenuBar(
-                    image="ui/menubar.png",
-                    calendar="ui/Calendar.png",
-                    calendar_onclick=calendar_onclick,
-                    chart="ui/BarChart.png",
-                    chart_onclick=chart_onclick,
-                    add="ui/Add.png",
-                    add_onclick=add_onclick
-                )
+    def end_form(self):
+        print(self.sleepForm.get_input_data())
+        print(self.emojiForm.get_input_data())
+        self.db.add_record(
+            self.sleepForm.get_input_data(),
+            self.tiredForm.get_input_data(),
+            self.happyForm.get_input_data(),
+            self.dayForm.get_input_data(),
+            self.emojiForm.get_input_data(),
+            )
+        self.formPage.reset()
+        self.page.go("/")
 
-    mainPage = PageLayout(
-                    content=ft.Column(
-                            
-                        controls=[
-
-                            HiMessage(
-                                text_style=basic_header,
-                            ),
-
-                            ft.Container(
-                                expand=True
-                            ),
-
-                            Quote(
-                                quote_style=quote_text,
-                                text_style=basic_text,
-                            )
-
-                        ],
-                    ), 
-                )
-
-    mainLayout = MainLayout(
-        page=mainPage,
-        menu_bar=menubar,
-    )
-
-
-        
-    tiredForm = TiredForm(
-        text_style1=wide_header,
-        text_style2=form_text
-    )
-
-    sleepForm = SleepForm(
-        text_style=form_text
-    )
-
-    happyForm = HappyForm(
-        text_style1=wide_header,
-        text_style2=form_text
-    )
-
-    dayFrom = DayForm(
-        text_style1=wide_header,
-        text_style2=form_text
-    )
-
-    emojiForm = EmojiForm(
-        text=ft.Text(
-            "Опиши свой день",
-            style=wide_text,
-            size=25
-        ),
-        text2=ft.Row(
-            controls=[
-                ft.Text(
-                    "одной",
-                    style=wide_text,
-                    size=25,
-                ),
-
-                ft.Text(
-                    "эмоцией",
-                    style=wide_text,
-                    size=25,
-                    color="#c9a6ff"
-                )
-            ],
-            alignment=ft.MainAxisAlignment.CENTER
-        )
-    )
-
-    def end_form():
-        print(sleepForm.get_input_data())
-        print(emojiForm.get_input_data())
-        formPage.reset()
-        page.go("/")
-   
-    formPage = FormLayout(
-        forms=[sleepForm, tiredForm, happyForm, dayFrom, emojiForm], 
-        end_event=end_form
-        )
-    
-
-    statsPage = StatsPage(
-        home_button=home_button
-    )
-
-    # mainLayout.set_page_no_update(statsPage)
-    mainScreen = ft.Container(
-            mainLayout,
-            gradient=ft.LinearGradient(
-                colors=["#000000", "#140C20"],
-                begin=ft.alignment.top_center,
-                end=ft.alignment.bottom_center,
-            ),
-            expand=True,
-            alignment=ft.alignment.top_left
-        )
-
-    formScreen = ft.Container(
-            formPage,
-            gradient=ft.LinearGradient(
-                colors=["#000000", "#140C20"],
-                begin=ft.alignment.top_center,
-                end=ft.alignment.bottom_center,
-            ),
-            expand=True,
-            alignment=ft.alignment.top_left
-        )
-
-    
-
-    def route_change(route):
-        page.views.clear()
-        page.views.append(
+    def route_change(self, route):
+        self.page.views.clear()
+        self.page.views.append(
             ft.View(
                 "/",
-                [
-                    mainScreen
-                ],
+                [self.mainScreen],
                 padding=0
             )
         )
         print(route)
-        print(page.route)    
+        print(self.page.route)
 
-        if page.route == "/":
-            mainLayout.set_page_no_update(mainPage)
+        if self.page.route == "/":
+            self.mainLayout.set_page_no_update(self.mainPage)
 
-        if page.route == "/new":
-            page.views.append(
+        if self.page.route == "/new":
+            self.page.views.append(
                 ft.View(
                     "/new",
-                    [
-                        formScreen
-                    ],
+                    [self.formScreen],
                     padding=0
                 )
             )
 
-        if page.route == "/calendar":
-            mainLayout.set_page_no_update(ft.Column(
+        if self.page.route == "/calendar":
+            self.mainLayout.set_page_no_update(ft.Column(
                 [
-                    home_button,
+                    self.home_button,
                     ft.Text("Coming soon...", style=wide_header),
                     ft.Container(expand=True, alignment=ft.alignment.center)
                 ],
                 expand=True
             ))
 
-        if page.route == "/stats":
-            mainLayout.set_page_no_update(statsPage)
+        if self.page.route == "/stats":
+            self.mainLayout.set_page_no_update(self.statsPage)
 
-        page.update()
+        self.page.update()
 
-    def view_pop(view):
-        page.views.pop()
-        top_view = page.views[-1]
-        page.go(top_view.route)
+    def view_pop(self, view):
+        self.page.views.pop()
+        top_view = self.page.views[-1]
+        self.page.go(top_view.route)
 
-    page.on_route_change = route_change
-    page.on_view_pop = view_pop
+    def close(self):
+        try:
+            self.db.connection.close()
+            print("Database connection closed.")
+        except AttributeError:
+            print("DB not initialized skipping connection close...")
 
-    page.go(page.route)
+def main(page: ft.Page):
+    app = App(page)
 
+    print("asdad")
 
 ft.app(main, assets_dir="assets")
-

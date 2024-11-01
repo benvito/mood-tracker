@@ -6,96 +6,79 @@ from enum import Enum
 from pages.form_page import FormPage
 from buttons.text_icon_button import TextIconButton
 from styles.text import *
-
-class EmojisFeelings(Enum):
-    LOVED = "loved"
-    FUNNY = "funny"
-    ANGEL = "angel"
-    CHILL = "chill"
-    COOL = "cool"
-    YAMMY = "yammy"
-    OK = "ok"
-    WTF = "wtf"
-    SLEEPY = "sleepy"
-    NOCOMMENTS = "nocomments"
-    DRUNK = "drunk"
-    DISCONTENT = "discontent"
-    PLSNO = "plsno"
-    SCARY = "scary"
-    TIRED = "tired"
-    BAD = "bad"
-    FUCK = "fuck"
+from backend import EmojisFeelings
 
 FEELING_LIST = [
-        {
-            "id": EmojisFeelings.LOVED.value,
-            "src": "ui/feelings/loved.png",
-        },
-        {
-            "id": EmojisFeelings.FUNNY.value,
-            "src": "ui/feelings/funny.png",
-        },
-        {
-            "id": EmojisFeelings.ANGEL.value,
-            "src": "ui/feelings/angel.png",
-        },
-        {
-            "id": EmojisFeelings.CHILL.value,
-            "src": "ui/feelings/chill.png",
-        },
-        {
-            "id": EmojisFeelings.COOL.value,
-            "src": "ui/feelings/cool.png",
-        },
-        {
-            "id": EmojisFeelings.YAMMY.value,
-            "src": "ui/feelings/yammy.png",
-        },
-        {
-            "id": EmojisFeelings.OK.value,
-            "src": "ui/feelings/ok.png",
-        },
-        {
-            "id": EmojisFeelings.WTF.value,
-            "src": "ui/feelings/wtf.png",
-        },
-        {
-            "id": EmojisFeelings.SLEEPY.value,
-            "src": "ui/feelings/sleepy.png",
-        },
-        {
-            "id": EmojisFeelings.NOCOMMENTS.value,
-            "src": "ui/feelings/noComments.png",
-        },
-        {
-            "id": EmojisFeelings.DRUNK.value,
-            "src": "ui/feelings/drunk.png",
-        },
-        {
-            "id": EmojisFeelings.DISCONTENT.value,
-            "src": "ui/feelings/discontent.png",
-        },
-        {
-            "id": EmojisFeelings.PLSNO.value,
-            "src": "ui/feelings/plsNo.png",
-        },
-        {
-            "id": EmojisFeelings.SCARY.value,
-            "src": "ui/feelings/scary.png",
-        },
-        {
-            "id": EmojisFeelings.TIRED.value,
-            "src": "ui/feelings/tired.png",
-        },
-        {
-            "id": EmojisFeelings.BAD.value,
-            "src": "ui/feelings/bad.png",
-        },
-        {
-            "id": EmojisFeelings.FUCK.value,
-            "src": "ui/feelings/fuck.png",
-        }
-    ]
+    {
+        "id": EmojisFeelings.LOVED.id,
+        "src": EmojisFeelings.LOVED.src,
+    },
+    {
+        "id": EmojisFeelings.FUNNY.id,
+        "src": EmojisFeelings.FUNNY.src,
+    },
+    {
+        "id": EmojisFeelings.ANGEL.id,
+        "src": EmojisFeelings.ANGEL.src,
+    },
+    {
+        "id": EmojisFeelings.CHILL.id,
+        "src": EmojisFeelings.CHILL.src,
+    },
+    {
+        "id": EmojisFeelings.COOL.id,
+        "src": EmojisFeelings.COOL.src,
+    },
+    {
+        "id": EmojisFeelings.YAMMY.id,
+        "src": EmojisFeelings.YAMMY.src,
+    },
+    {
+        "id": EmojisFeelings.OK.id,
+        "src": EmojisFeelings.OK.src,
+    },
+    {
+        "id": EmojisFeelings.WTF.id,
+        "src": EmojisFeelings.WTF.src,
+    },
+    {
+        "id": EmojisFeelings.SLEEPY.id,
+        "src": EmojisFeelings.SLEEPY.src,
+    },
+    {
+        "id": EmojisFeelings.NOCOMMENTS.id,
+        "src": EmojisFeelings.NOCOMMENTS.src,
+    },
+    {
+        "id": EmojisFeelings.DRUNK.id,
+        "src": EmojisFeelings.DRUNK.src,
+    },
+    {
+        "id": EmojisFeelings.DISCONTENT.id,
+        "src": EmojisFeelings.DISCONTENT.src,
+    },
+    {
+        "id": EmojisFeelings.PLSNO.id,
+        "src": EmojisFeelings.PLSNO.src,
+    },
+    {
+        "id": EmojisFeelings.SCARY.id,
+        "src": EmojisFeelings.SCARY.src,
+    },
+    {
+        "id": EmojisFeelings.TIRED.id,
+        "src": EmojisFeelings.TIRED.src,
+    },
+    {
+        "id": EmojisFeelings.BAD.id,
+        "src": EmojisFeelings.BAD.src,
+    },
+    {
+        "id": EmojisFeelings.FUCK.id,
+        "src": EmojisFeelings.FUCK.src,
+    },
+]
+
     
 
 class EmojiForm(FormPage):
