@@ -2,6 +2,8 @@ import flet as ft
 from elements.tiles import *
 from styles.text import *
 from styles.gradients import *
+from backend.constants import *
+import logging
 
 class FreqEmote(ContentTile):
     def __init__(
@@ -14,8 +16,8 @@ class FreqEmote(ContentTile):
             style=basic_text,
         )
 
-        self._top1 = "ui/feelings/loved.png"
-        self._top2 = "ui/feelings/cool.png"
+        self._top1 = EmojisFeelings.QUESTION.src
+        self._top2 = EmojisFeelings.QUESTION.src
 
         self.top_1_img = ft.Image(
                             src=self._top1,
@@ -77,3 +79,16 @@ class FreqEmote(ContentTile):
     def top2(self, value):
         self._top2 = value
         self.top_2_img.src = value
+
+    def set_data(self, data : list):
+        if len(data) == 2:
+            self.top1 = EmojisFeelings.get_src_by_id(data[0])
+            self.top2 = EmojisFeelings.get_src_by_id(data[1])
+        elif len(data) == 1:
+            logging.warning("Only one emotion found")
+            self.top1 = EmojisFeelings.get_src_by_id(data[0])
+            self.top2 = EmojisFeelings.QUESTION.src
+        else:
+            logging.warning("No emotion found")
+            self.top1 = EmojisFeelings.QUESTION.src
+            self.top2 = EmojisFeelings.QUESTION.src

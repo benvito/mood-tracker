@@ -14,7 +14,7 @@ class PercentHappy(ContentTile):
             style=basic_text,
         )
 
-        self._percent_happy = 67
+        self._percent_happy = 0
 
         self.number = ft.Text(
             self.percent_happy,
@@ -70,3 +70,5 @@ class PercentHappy(ContentTile):
         self.number.value = value
         self.update()
     
+    def set_data(self, data):
+        self.percent_happy = data

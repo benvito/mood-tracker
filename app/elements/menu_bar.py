@@ -43,7 +43,7 @@ class MenuBar(ft.Container):
             [
                 ft.Container(
                     content=ft.Image(src=image),
-                    
+                    alignment=ft.alignment.bottom_center,
                 ),
             
                 ft.Container(
@@ -56,11 +56,13 @@ class MenuBar(ft.Container):
                     ),
                     margin=ft.margin.symmetric(horizontal=42, vertical=5),
                     expand=True,
+                    alignment=ft.alignment.bottom_center,
                 ),
                 
                 ft.Container(
                     content=addbutton,
-                    bottom=25
+                    alignment=ft.alignment.top_center,
+                    margin=ft.margin.symmetric(horizontal=125)
                 )
             ],
             alignment=ft.alignment.bottom_center,

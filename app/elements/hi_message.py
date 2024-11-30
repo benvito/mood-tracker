@@ -10,12 +10,13 @@ import flet as ft
 class HiMessage(ft.Container):
     def __init__(
             self,
+            message : str = None,
             text_style : ft.TextStyle = None, 
             *args, 
             **kwargs
             ):
         super().__init__(*args, **kwargs)
-        self.hi_text = ft.Text("Hi, <username>", style=text_style, size=25)
+        self.hi_text = ft.Text(message, style=text_style, size=20)
         self.emote_text = ft.Text("👋", size=25)
         self.content = ft.Column(
             [self.hi_text, self.emote_text],

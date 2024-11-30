@@ -1,1 +1,6 @@
 venv
+logs
+data
+build
+*.db
+*.log

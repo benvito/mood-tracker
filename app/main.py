@@ -6,7 +6,7 @@ from elements.hi_message import HiMessage
 from elements.quote import Quote
 from buttons.image_button import ImageButton
 from layouts.form_layout import FormLayout
-from pages.form_page import FormPage
+from pages.calendar_page import CalenarPage
 from pages.sleep_form import SleepForm
 from pages.tired_form import TiredForm
 from pages.happy_form import HappyForm
@@ -16,12 +16,15 @@ from pages.stats import StatsPage
 from styles.text import *
 from backend.db import DatabaseController
 
+import logging
+import log.log as log
+ 
 class App:
     def __init__(self, page: ft.Page):
         self.page = page
-        self.page.window.width = 375
-        self.page.window.height = 812
-        self.page.window.always_on_top = True
+        self.page.window_width = 375
+        self.page.window_height = 812
+        self.page.window_always_on_top = True
 
         self.page.bgcolor = "#0b0713"
         self.page.padding = 0
@@ -34,7 +37,7 @@ class App:
         self.page.go(self.page.route)
 
     def init_backend(self):
-        print("Database connection open")
+        logging.info("Database connection open")
         self.db = DatabaseController()
 
     def init_components(self):
@@ -57,18 +60,19 @@ class App:
         self.mainPage = PageLayout(
             content=ft.Column(
                 controls=[
-                    HiMessage(text_style=basic_header),
+                    HiMessage(text_style=basic_header, message=self.db.get_random_greeting()),
                     ft.Container(expand=True),
-                    Quote(quote_style=quote_text, text_style=basic_text),
+                    Quote(quote_style=quote_text, text_style=basic_text, quote=self.db.get_random_quote()),
                 ],
             ),
         )
 
-        self.tiredForm = TiredForm(text_style1=wide_header, text_style2=form_text)
-        self.sleepForm = SleepForm(text_style=form_text)
-        self.happyForm = HappyForm(text_style1=wide_header, text_style2=form_text)
-        self.dayForm = DayForm(text_style1=wide_header, text_style2=form_text)
+        self.tiredForm = TiredForm(home_button=self.home_button, text_style1=wide_header, text_style2=form_text)
+        self.sleepForm = SleepForm(home_button=self.home_button, text_style=form_text)
+        self.happyForm = HappyForm(home_button=self.home_button, text_style1=wide_header, text_style2=form_text)
+        self.dayForm = DayForm(home_button=self.home_button, text_style1=wide_header, text_style2=form_text)
         self.emojiForm = EmojiForm(
+            home_button=self.home_button,
             text=ft.Text("Опиши свой день", style=wide_text, size=25),
             text2=ft.Row(
                 controls=[
@@ -84,7 +88,9 @@ class App:
             end_event=self.end_form
         )
 
-        self.statsPage = StatsPage(home_button=self.home_button)
+        self.statsPage = StatsPage(home_button=self.home_button, db=self.db)
+
+        self.calendarPage = CalenarPage(home_button=self.home_button, db=self.db)
 
         self.mainLayout = MainLayout(page=self.mainPage, menu_bar=self.menubar)
 
@@ -115,23 +121,34 @@ class App:
         self.page.on_view_pop = self.view_pop
 
     def go_home(self, _):
+        logging.info("Home button clicked. Going to home page...")
+
         self.page.go("/")
 
     def calendar_onclick(self, _):
+        logging.info("Calendar button clicked. Going to calendar page...")
+
         self.page.go("/calendar")
-        print("calendar")
 
     def chart_onclick(self, _):
+        logging.info("Chart button clicked. Going to stats page...")
+
         self.page.go("/stats")
-        print("chart")
 
     def add_onclick(self, _):
+        logging.info("AddRecord button clicked. Going to form page...")
+
         self.page.go("/new")
-        print("add")
 
     def end_form(self):
-        print(self.sleepForm.get_input_data())
-        print(self.emojiForm.get_input_data())
+        logging.info("Forms pages end. Getting all forms data...")
+    
+        logging.info(f"Sleep data: {self.sleepForm.get_input_data()}")
+        logging.info(f"Tired data: {self.tiredForm.get_input_data()}")
+        logging.info(f"Happy data: {self.happyForm.get_input_data()}")
+        logging.info(f"Day data: {self.dayForm.get_input_data()}")
+        logging.info(f"Emoji data: {self.emojiForm.get_input_data()}")
+
         self.db.add_record(
             self.sleepForm.get_input_data(),
             self.tiredForm.get_input_data(),
@@ -139,10 +156,10 @@ class App:
             self.dayForm.get_input_data(),
             self.emojiForm.get_input_data(),
             )
-        self.formPage.reset()
         self.page.go("/")
 
     def route_change(self, route):
+        logging.info(f"Route changed to {route.route}")
         self.page.views.clear()
         self.page.views.append(
             ft.View(
@@ -151,13 +168,12 @@ class App:
                 padding=0
             )
         )
-        print(route)
-        print(self.page.route)
 
         if self.page.route == "/":
             self.mainLayout.set_page_no_update(self.mainPage)
 
         if self.page.route == "/new":
+            self.formPage.reset(update=False)
             self.page.views.append(
                 ft.View(
                     "/new",
@@ -167,17 +183,14 @@ class App:
             )
 
         if self.page.route == "/calendar":
-            self.mainLayout.set_page_no_update(ft.Column(
-                [
-                    self.home_button,
-                    ft.Text("Coming soon...", style=wide_header),
-                    ft.Container(expand=True, alignment=ft.alignment.center)
-                ],
-                expand=True
-            ))
+            self.mainLayout.set_page_no_update(self.calendarPage)
+            self.calendarPage.update_calendar_data()
 
         if self.page.route == "/stats":
             self.mainLayout.set_page_no_update(self.statsPage)
+            self.page.update()
+
+            self.statsPage.set_data()
 
         self.page.update()
 
@@ -189,13 +202,13 @@ class App:
     def close(self):
         try:
             self.db.connection.close()
-            print("Database connection closed.")
+            logging.info("Database connection closed")
         except AttributeError:
-            print("DB not initialized skipping connection close...")
+            logging.warning("DB not initialized skipping connection close...")
 
 def main(page: ft.Page):
+    log.init_logging()
+    logging.info("Starting app...")
     app = App(page)
-
-    print("asdad")
 
 ft.app(main, assets_dir="assets")

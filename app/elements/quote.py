@@ -4,13 +4,14 @@ import flet as ft
 class Quote(ft.Container):
     def __init__(
             self, 
+            quote : str = None,
             text_style : ft.TextStyle = None, 
             quote_style : ft.TextStyle = None, 
             *args, **kwargs
             ):
         super().__init__(*args, **kwargs)
         self.quote = ft.Text(
-            "«Возможности не приходят сами — вы создаете их»", 
+            quote, 
             style=quote_style,
             text_align=ft.TextAlign.START
             )

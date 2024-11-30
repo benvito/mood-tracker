@@ -93,7 +93,9 @@ class EmojiForm(FormPage):
     ):
 
         FormPage.__init__(
-            self
+            self,
+            *args,
+            **kwagrs
         )
 
         self.text = text
@@ -126,6 +128,14 @@ class EmojiForm(FormPage):
                         ft.Column(
                             controls=[
                                 ft.Container(
+                                    self.home_button,     
+                                ),
+
+                                ft.Container(
+                                    expand=True,
+                                ),
+
+                                ft.Container(
                                     self.text,
                                     alignment=ft.alignment.center,
                                 ),
@@ -133,6 +143,10 @@ class EmojiForm(FormPage):
                                 ft.Container(
                                     self.text2,
                                     alignment=ft.alignment.center,
+                                ),
+
+                                ft.Container(
+                                    expand=True,
                                 ),
                             ],
                             expand=True,
@@ -150,6 +164,9 @@ class EmojiForm(FormPage):
 
     def get_input_data(self):
         return self.choose.get_current_image_id()
+
+    def reset(self):
+        self.choose.reset_current_index()
 
     def get_info(self):
         return "EmojiForm"

@@ -34,17 +34,21 @@ class ChooseOption(ft.Stack):
 
         self.image_cont = ft.Container(
             content=self.image_row,
-            alignment=ft.alignment.center
+            alignment=ft.alignment.center,
         )
 
         # Контейнер с кнопками
 
-        self.buttons = ft.Row(
+        self.buttons = ft.Container(
+        ft.Row(
             controls=[self.left_button, self.right_button],
             alignment=ft.MainAxisAlignment.CENTER,
             vertical_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=self.image_size * 1.40,
-            opacity=0.5
+            opacity=0.5,
+        ),
+        height=self.image_size,
+        alignment=ft.alignment.center
         )
         
         self.controls = [self.image_cont, self.buttons]
@@ -98,3 +102,7 @@ class ChooseOption(ft.Stack):
 
     def get_current_image_id(self):
         return self.image_list[self.current_index]["id"]
+
+    def reset_current_index(self):
+        self.current_index = 0
+        self.update_image_controls()

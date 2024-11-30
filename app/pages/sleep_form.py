@@ -8,6 +8,8 @@ class SleepForm(FormPage):
     def __init__(
         self,
         text_style,
+        *args,
+        **kwagrs,
     ):
 
         backImage=ft.Container(
@@ -28,7 +30,17 @@ class SleepForm(FormPage):
             text_style=wide_header
         )
 
-        FormPage.__init__(self, backImage, text, minSlider, maxSlider, sliderColor, button)
+        FormPage.__init__(
+            *args, 
+            **kwagrs,
+            self=self, 
+            backImage=backImage, 
+            text=text, 
+            minSlider=minSlider, 
+            maxSlider=maxSlider, 
+            sliderColor=sliderColor, 
+            button=button, 
+            )
 
     def get_info(self):
         return "SleepForm"

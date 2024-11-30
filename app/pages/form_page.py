@@ -14,14 +14,21 @@ class FormPage(ft.Stack):
         button : TextIconButton = TextIconButton(),
         button_size : int = 50,
         *args,
-        **kwagrs,
+        **kwargs,
     ):
-        super().__init__(*args, **kwagrs)
+
+        home_button = kwargs.pop('home_button', None)
+        self.home_button = home_button
+
+
+        super().__init__(*args, **kwargs)
 
 
         self.expand = True
         self.backImage = backImage
         self.text = text
+
+        
 
         self.button = button
         self.btn_container = ft.Container(
@@ -43,6 +50,14 @@ class FormPage(ft.Stack):
                 content=ft.Column(
 
                     controls=[
+                        ft.Container(
+                            self.home_button,
+                        ),
+                        # все выше него наверху экрана
+                        ft.Container(
+                          expand=True  
+                        ),
+                        # все ниже - внизу экрана
                         text,
                         ft.Container(    
                             content=self.slider,
@@ -70,6 +85,9 @@ class FormPage(ft.Stack):
 
     def get_input_data(self):
         return self.slider.value
+
+    def reset(self):
+        self.slider.value = 0
 
     def get_info(self):
         return "Basic Form Template"

@@ -14,7 +14,7 @@ class TiredScore(ContentTile):
             style=basic_text,
         )
 
-        self._tired_score = 7
+        self._tired_score = 0
         self.max_score = 10
 
         self.number = ft.Text(
@@ -80,4 +80,7 @@ class TiredScore(ContentTile):
         self._tired_score = value
         self.number.value = value
         self.update()
+
+    def set_data(self, data):
+        self.tired_score = data
     

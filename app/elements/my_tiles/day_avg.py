@@ -14,7 +14,7 @@ class DayAvg(ContentTile):
             style=basic_text,
         )
 
-        self._avg_day = 89
+        self._avg_day = 0
 
         self.number = ft.Text(
             self._avg_day,
@@ -102,4 +102,7 @@ class DayAvg(ContentTile):
         self.progress_width = (self._avg_day / 100) * self.progress_bar_width
         self.progress.width = self.progress_width
         self.update()
+
+    def set_data(self, data):
+        self.avg_day = data
     

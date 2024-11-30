@@ -1,5 +1,6 @@
 import flet as ft
 from pages.form_page import FormPage
+import logging
 
 class FormLayout(ft.Container):
     def __init__(
@@ -38,11 +39,12 @@ class FormLayout(ft.Container):
     def get_current_form(self):
         return self.animForm.content
 
-    def set_form(self, form):
+    def set_form(self, form, update=True):
         form.set_button_on_click(self.next_form)        
         self.animForm.content = form
-        print(self.forms[self.current_form].get_info())
-        self.update()
+        logging.info(f"Form changed to: {form.__class__.__name__}")
+
+        self.safe_update(update=update)
 
     def next_form(self, _):
         self.current_form = self.current_form + 1
@@ -51,7 +53,20 @@ class FormLayout(ft.Container):
             return
         self.set_form(self.forms[self.current_form])
 
-    def reset(self):
+    def reset(self, update=True):
+        for form in self.forms:
+            try:
+                form.reset()
+                logging.info(f"Form reseted: {form.__class__.__name__}")
+            except AttributeError:
+                logging.warning(f"Form not reseted: {form.__class__.__name__}")
         self.current_form = self.init
-        self.set_form(self.forms[self.current_form])
-        self.update()
+        self.set_form(self.forms[self.current_form], update=False)
+        self.safe_update(update=update)
+
+    def safe_update(self, update=True):
+        if update:
+            try:
+                self.update()
+            except AssertionError:
+                logging.warning(f"{self.__class__.__name__} try to update before add to page")

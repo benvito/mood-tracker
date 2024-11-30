@@ -9,6 +9,8 @@ class TiredForm(FormPage):
         self,
         text_style1,
         text_style2,
+        *args,
+        **kwagrs,
     ):
 
         backImage=ft.Container(
@@ -42,7 +44,17 @@ class TiredForm(FormPage):
             text_style=wide_header
         )
 
-        FormPage.__init__(self, backImage, text, minSlider, maxSlider, sliderColor, button)
-
+        FormPage.__init__(
+            *args, 
+            **kwagrs,
+            self=self, 
+            backImage=backImage, 
+            text=text, 
+            minSlider=minSlider, 
+            maxSlider=maxSlider, 
+            sliderColor=sliderColor, 
+            button=button, 
+            )
+        
     def get_info(self):
         return "TiredForm"
